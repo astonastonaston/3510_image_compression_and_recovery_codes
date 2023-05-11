@@ -6,20 +6,16 @@ import matplotlib.pyplot as plt
 
 def salt_pepper(image, salt, pepper):
     """
-    添加椒盐噪声的图像
-    :param image: 输入图像
-    :param salt: 盐比例
-    :param pepper: 椒比例
-    :return: 添加了椒盐噪声的图像
+    adding salt-pepper noises to the image
     """
     height = image.shape[0]
     width = image.shape[1]
-    pertotal = salt + pepper    #总噪声占比
+    sp_total_per = salt + pepper    #总噪声占比
     noise_image = image.copy()
-    noise_num = int(pertotal * height * width)
+    noise_num = int(sp_total_per * height * width)
     for i in range(noise_num):
         rows = np.random.randint(0, height-1)
-        cols = np.random.randint(0,width-1)
+        cols = np.random.randint(0, width-1)
         if(np.random.randint(0,100)<salt*100):
             noise_image[rows][cols] = 255
         else:
@@ -31,10 +27,10 @@ def main():
     path = "../static/lenna.jpg"
     img = cv2.imread(path, 0)
 
-    # 加入椒盐噪声
+    # implant salt-pepper noise
     noise = salt_pepper(img, 0.1, 0.1)
 
-    # 经过中值和均值滤波器消除噪声
+    # eliminating the noise using different filters
     res_median = cv2.medianBlur(noise, 5) # median filter 
     res_mean = cv2.blur(noise,(7,7)) # mean filter 
     res_Gaussian = cv2.GaussianBlur(noise,(7,7),0) # gaussian filter
