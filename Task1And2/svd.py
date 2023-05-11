@@ -4,8 +4,10 @@ import matplotlib as mpl
 import numpy as np
 import matplotlib.pyplot as plt
 
-# 转为u8类型
-def restore1(u, sigma, v, k):
+def decode(u, sigma, v, k):
+    """
+    decode the compressed image
+    """
     m = len(u)
     n = len(v)
     a = np.zeros((m, n))
@@ -14,18 +16,20 @@ def restore1(u, sigma, v, k):
     # s1 += k
     # s1 += np.size(v[:k, :])
     # s2 = m * n
-    # # print(s2)
-    # # print(s1)
-    # print("压缩率：",s2/s1)
+    # print(s2)
+    # print(s1)
+    # print("compression ratio：",s2/s1)
     a[a < 0] = 0
     a[a > 255] = 255
     return np.rint(a).astype('uint8')
 
 def SVD(frame,K=10):
+    """
+    perform svd on a given frame, and compress the image
+    """
     a = np.array(frame)
-    # 由于是彩色图像，所以3通道。a的最内层数组为三个数，分别表示RGB，用来表示一个像素
     u, sigma, v = np.linalg.svd(a[:, :])
-    I = restore1(u, sigma, v, K)
+    I = decode(u, sigma, v, K)
     return I
 
 def svd(img, ratio):
